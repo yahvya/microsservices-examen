@@ -1,7 +1,7 @@
 ###
 @applicationLink=http://localhost:8090/patient
 
-###
+### add patient
 POST http://localhost:8090/patient/add
 Content-Type: application/json
 
@@ -10,4 +10,30 @@ Content-Type: application/json
   "firstname":"Prénom patient",
   "birthdate":"1976-05-17",
   "phoneNumber": "0652301171"
+}
+
+### modify patient , use the previous created patient
+POST http://localhost:8090/patient/modify
+Content-Type: application/json
+
+{
+  "id": "73854c8b-26c0-4a29-8b73-8fc068eb6e97",
+  "name": "nom patient",
+  "firstname": "Prénom patient",
+  "birthdate": "1976-05-17",
+  "phoneNumber": "0652301171"
+}
+
+### get all patients
+GET http://localhost:8090/patient/list
+
+### get a patient , use the previous created patient id
+GET http://localhost:8090/patient/info/73854c8b-26c0-4a29-8b73-8fc068eb6e97
+
+### delete patient , use the previous created patient id
+POST http://localhost:8090/patient/delete/73854c8b-26c0-4a29-8b73-8fc068eb6e97
+Content-Type: application/json
+
+{
+  "id": "73854c8b-26c0-4a29-8b73-8fc068eb6e97"
 }
