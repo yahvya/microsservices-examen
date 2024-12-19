@@ -1,0 +1,13 @@
+###
+@applicationLink=http://localhost:8090/patient
+
+###
+POST http://localhost:8090/patient/add
+Content-Type: application/json
+
+{
+  "name" : "Bathily",
+  "firstname":"Prénom patient",
+  "birthdate":"1976-05-17",
+  "phoneNumber": "0652301171"
+}
