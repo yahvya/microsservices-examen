@@ -1,9 +1,6 @@
 package yahvya.practitionner.datacontracts.practitionner;
 
 import jakarta.persistence.*;
-import yahvya.practitionner.datacontracts.consultations.Consultation;
-
-import java.util.List;
 
 /**
  * @brief practitionner database data contract
@@ -32,10 +29,4 @@ public class Practitionner {
      */
     @Column(name="practice_field")
     public String practiceField;
-
-    /**
-     * @brief list of his consultations
-     */
-    @OneToMany(mappedBy = "practitionner")
-    public List<Consultation> consultations;
 }

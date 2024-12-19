@@ -1,0 +1,37 @@
+###
+@baseUrl=http://localhost:8190/practitionner
+
+### create a new practitionner
+POST {{baseUrl}}/create
+Content-Type: application/json
+
+{
+  "name": "Bathily",
+  "firstname": "Yahaya",
+  "practiceField": "Vétérinaire"
+}
+
+### modify a practitionner, use the previous created one
+POST {{baseUrl}}/modify
+Content-Type: application/json
+
+{
+  "id": "8c633bb9-13bf-4022-ba55-744ec477e0e1",
+  "name": "Bathily",
+  "firstname": "Yahaya",
+  "practiceField": "Chirurgien"
+}
+
+### list all
+GET {{baseUrl}}/list
+
+### get precise one data, use previous created
+GET {{baseUrl}}/info/8c633bb9-13bf-4022-ba55-744ec477e0e1
+
+### delete precise one
+POST {{baseUrl}}/delete
+Content-Type: application/json
+
+{
+  "id": "8c633bb9-13bf-4022-ba55-744ec477e0e1"
+}
