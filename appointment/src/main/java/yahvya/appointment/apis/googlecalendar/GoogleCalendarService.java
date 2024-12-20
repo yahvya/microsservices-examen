@@ -1,8 +1,14 @@
 package yahvya.appointment.apis.googlecalendar;
 
+import com.google.api.client.util.DateTime;
+import com.google.api.services.calendar.model.CalendarListEntry;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.google.api.services.calendar.Calendar;
+
+import java.util.List;
 
 /**
  * @brief calendar service
@@ -18,7 +24,7 @@ public class GoogleCalendarService {
     /**
      * @brief create a calendar for a practitionner
      * @param practitionnerId practitionner id
-     * @return the created calendar data
+     * @return the created calendar data or null on failure
      */
     public CalendarDataContract createNewCalendarFor(String practitionnerId){
         try{
@@ -32,40 +38,70 @@ public class GoogleCalendarService {
         }
     }
 
-    public void test(){
+    /**
+     * @brief get a practitionner calendar
+     * @param practitionnerId practitionner id
+     * @return the calendar or null
+     */
+    public CalendarDataContract getCalendarFor(String practitionnerId){
         try{
+             List<CalendarListEntry> items = this.calendarService.calendarList().list().execute().getItems();
 
-            // créer un
-            /*
-            var testCalendaer = new com.google.api.services.calendar.model.Calendar();
+            for(CalendarListEntry item : items){
+                // find calendar
+                if(item.getSummary().equals(practitionnerId)){
+                    CalendarDataContract calendar = CalendarDataContract.fromGoogleCalendar(this.calendarService.calendars().get(item.getId()).execute());
 
-            testCalendaer.setSummary("Test Summary");
-            testCalendaer.setTimeZone("UTC");
+                    // fill calendar with his events
+                    this.calendarService.events().list(calendar.id).execute().getItems().forEach(event -> calendar.events.add(CalendarDataContract.CalendarEventDataContract.fromGoogleEvent(event)));
 
-            System.out.println(service.calendars().insert(testCalendaer).execute());
-            */
-            // récupérer la liste
-            /*
-             System.out.println(service.calendarList().list().execute().getItems());
-             */
-            // ajouter un évènement
-            /*
-            var id = service.calendarList().list().execute().getItems().get(0).getId();
-            var event = new Event().setSummary("Réunion avec l'équipe")
-                    .setDescription("Discuter du projet X et de l'avancement")
-                    .setLocation("Paris, France")
-                    .setStart(new EventDateTime()
-                            .setDateTime(new DateTime("2024-12-20T10:00:00+01:00"))
-                            .setTimeZone("Europe/Paris"))
-                    .setEnd(new EventDateTime()
-                            .setDateTime(new DateTime("2024-12-20T11:00:00+01:00"))
-                            .setTimeZone("Europe/Paris"));
+                    return calendar;
+                }
+            }
 
-            System.out.println(service.events().insert(id, event).execute());
-             */
+            return this.createNewCalendarFor(practitionnerId);
         }
         catch(Exception e){
             System.out.println(e);
+            return null;
+        }
+    }
+
+    /**
+     * @brief add appointment
+     * @param practitionnerId practionner id
+     * @param startDate start date
+     * @param endDate end date
+     * @param reason reason
+     * @param price price
+     * @param patientId patient id
+     * @return whole calendar
+     */
+    public CalendarDataContract addAppointmentToCalendar(String practitionnerId, String startDate,String endDate,String reason,String price,String patientId){
+        try {
+            CalendarDataContract calendar = this.getCalendarFor(practitionnerId);
+
+            if (calendar == null)
+                calendar = this.createNewCalendarFor(practitionnerId);
+
+            if (calendar == null)
+                return null;
+
+            Event event = new Event()
+                    .setSummary(patientId)
+                    .setDescription(reason)
+                    .setStart(new EventDateTime().setDateTime(new DateTime(startDate)))
+                    .setEnd(new EventDateTime().setDateTime(new DateTime(endDate)))
+                    .setExtendedProperties(new Event.ExtendedProperties().set("price", price));
+
+            Event createdEvent =this.calendarService.events().insert(calendar.id,event).execute();
+
+            calendar.events.add(CalendarDataContract.CalendarEventDataContract.fromGoogleEvent(createdEvent));
+
+            return calendar;
+        }
+        catch(Exception e){
+            return null;
         }
     }
 }

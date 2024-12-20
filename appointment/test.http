@@ -1,2 +1,18 @@
 ###
 @baseUrl=http://localhost:8240/appointment
+
+###
+GET {{baseUrl}}/calendar/yahaya
+
+###
+POST {{baseUrl}}/calendar/add
+Content-Type: application/json
+
+{
+  "practionner-id" : "yahaya",
+  "start-date" : "2024-13-20T10:10:00+01:00",
+  "end-date" : "2024-14-20T10:10:00+01:00",
+  "reason" : "Test evenr",
+  "patient-id" : "quelqu'un",
+  "price" : "100"
+}
