@@ -1,26 +1,36 @@
 package yahvya.appointment.apis.googlecalendar;
 
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.client.util.DateTime;
-import com.google.api.services.calendar.CalendarScopes;
-import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventDateTime;
-import com.google.auth.oauth2.ServiceAccountCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import com.google.api.services.calendar.Calendar;
-import com.google.api.services.calendar.Calendar;
 
-import java.io.FileInputStream;
-import java.util.List;
-
+/**
+ * @brief calendar service
+ */
 @Service
 public class GoogleCalendarService {
+    /**
+     * @brief calendar service
+     */
     @Autowired
-    private Calendar service;
+    private Calendar calendarService;
+
+    /**
+     * @brief create a calendar for a practitionner
+     * @param practitionnerId practitionner id
+     * @return the created calendar data
+     */
+    public CalendarDataContract createNewCalendarFor(String practitionnerId){
+        try{
+            com.google.api.services.calendar.model.Calendar newCalendar = new com.google.api.services.calendar.model.Calendar();
+            newCalendar.setSummary(practitionnerId);
+
+            return CalendarDataContract.fromGoogleCalendar(this.calendarService.calendars().insert(newCalendar).execute());
+        }
+        catch(Exception e){
+            return null;
+        }
+    }
 
     public void test(){
         try{

@@ -34,9 +34,7 @@ public class GoogleCalendarConfiguration {
 
             // build service
             HttpTransport httpTransport = new NetHttpTransport();
-            return new Calendar.Builder(httpTransport, new GsonFactory(), (request) -> {
-                request.getHeaders().set("Authorization", "Bearer " + token);
-            }).setApplicationName("applicationName").build();
+            return new Calendar.Builder(httpTransport, new GsonFactory(), (request) -> request.getHeaders().set("Authorization", "Bearer " + token)).setApplicationName("Micro services java").build();
         }
         catch(Exception e){
             return null;
