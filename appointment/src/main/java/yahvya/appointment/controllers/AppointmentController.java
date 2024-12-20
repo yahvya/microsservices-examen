@@ -30,7 +30,7 @@ public class AppointmentController {
     }
 
     /**
-     * @brief add a nex appintment
+     * @brief add a next appointment
      * @param requestBody body
      */
     @PostMapping("calendar/add")
